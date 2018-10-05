@@ -13,7 +13,8 @@ class Album extends Component {
     this.state = {
       album: album,
       currentSong: album.songs[0],
-      isPlaying: false
+      isPlaying: false,
+      isHovered: null
     };
 
     this.audioElement = document.createElement('audio');
@@ -35,6 +36,10 @@ class Album extends Component {
     this.setState({ currentSong: song });
   }
 
+  displayButtonState(song){
+
+  }
+
   handleSongClick(song) {
     const isSameSong = this.state.currentSong === song;
     if (this.state.isPlaying && isSameSong) {
@@ -42,6 +47,26 @@ class Album extends Component {
     } else {
       if (!isSameSong) {this.setSong(song);}
       this.play();
+    }
+  }
+
+  handleOnMouseEnter(song){
+    this.setState({ isHovered: song });
+  }
+
+  handleOnMouseLeave(song){
+    this.setState({ isHovered: null });
+  }
+
+  displayButton(song, index){
+    if (this.state.isHovered === song && this.state.currentSong !== song) {
+      return <span className="ion-md-play"></span>
+    } else if (this.state.isPlaying && this.state.currentSong === song) {
+      return <span className="ion-md-pause"></span>
+    } else if (!this.state.isPlaying && this.state.currentSong === song) {
+      return <span className="ion-md-play"></span>
+    } else {
+      return <span>{index + 1}</span>
     }
   }
 
@@ -65,8 +90,8 @@ class Album extends Component {
           <tbody>
             {
               this.state.album.songs.map( (song, index) =>
-                <tr className="song" key={index} onClick={() => this.handleSongClick(song)}>
-                  <td>{index + 1}</td>
+                <tr className="song" key={index} onClick={() => this.handleSongClick(song)} onMouseEnter={() => this.handleOnMouseEnter(song)} onMouseLeave={() => this.handleOnMouseLeave(song)}>
+                  <td>{this.displayButton(song, index)}</td>
                   <td>{song.title}</td>
                   <td>{song.duration}</td>
                 </tr>
