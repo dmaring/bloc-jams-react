@@ -67,6 +67,18 @@ class Album extends Component {
     this.play();
   }
 
+  handleForwardClick() {
+    //find the index of the current song
+    const currentIndex = this.state.album.songs.findIndex(song => this.state.currentSong === song);
+    // calculate song index - 1 never going below 0
+    const newIndex = Math.min(currentIndex + 1, this.state.album.songs.length - 1);
+    // set the new song via the index
+    const newSong = this.state.album.songs[newIndex];
+    this.setSong(newSong);
+    // play the song
+    this.play();
+  }
+
   displayButton(song, index){
     if (this.state.isHovered === song && this.state.currentSong !== song) {
       return <span className="ion-md-play"></span>
@@ -113,6 +125,7 @@ class Album extends Component {
           currentSong={this.state.currentSong}
           handleSongClick={() => this.handleSongClick(this.state.currentSong)}
           handlePrevClick={() => this.handlePrevClick()}
+          handleForwardClick={() => this.handleForwardClick()}
         />
       </section>
     );
